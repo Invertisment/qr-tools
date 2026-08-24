@@ -1,4 +1,4 @@
-package com.example.qrtools
+package io.github.invertisment.qrtools
 
 import org.junit.Test
 

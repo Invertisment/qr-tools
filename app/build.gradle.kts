@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.qrtools"
+    namespace = "io.github.invertisment.qrtools"
     compileSdk {
         version = release(37)
     }
 
     defaultConfig {
-        applicationId = "com.example.qrtools"
+        applicationId = "io.github.invertisment.qrtools"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
