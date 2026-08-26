@@ -35,7 +35,17 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
-    testImplementation(libs.junit)
+    implementation(libs.zxing.core)
+
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.zxing.javase)
+    testImplementation(libs.konsist)
+
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }

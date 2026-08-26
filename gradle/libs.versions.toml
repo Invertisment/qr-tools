@@ -3,17 +3,26 @@ agp = "9.3.2"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
+junitJupiter = "5.11.3"
+junitPlatformLauncher = "1.11.3"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 material = "1.10.0"
+zxing = "3.5.3"
+konsist = "0.17.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher", version.ref = "junitPlatformLauncher" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+zxing-javase = { group = "com.google.zxing", name = "javase", version.ref = "zxing" }
+konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
