@@ -3,6 +3,7 @@ package io.github.invertisment.qrtools.qr
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap
 import com.google.zxing.DecodeHintType
+import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.ReaderException
@@ -15,8 +16,19 @@ import com.google.zxing.qrcode.QRCodeWriter
  */
 object QrCodec {
 
+    /**
+     * ZXing's default segmentation encoder has a confirmed bit-alignment bug that can
+     * produce a symbol its own reader cannot decode, for some short strings that mix
+     * characters eligible for ALPHANUMERIC mode with characters that force BYTE mode (e.g.
+     * "#  f          !-5\"5!%,"). QR_COMPACT selects ZXing's minimal-encoding algorithm,
+     * which avoids that specific case, at no known cost — but does not make round-tripping
+     * universal: see QrCodecPropertyTest for a separate, lower-frequency decode-side
+     * limitation that persists regardless of this hint.
+     */
+    private val encodeHints = mapOf(EncodeHintType.QR_COMPACT to true)
+
     fun encode(payload: QrPayload): QrMatrix {
-        val bitMatrix = QRCodeWriter().encode(payload.text, BarcodeFormat.QR_CODE, 0, 0)
+        val bitMatrix = QRCodeWriter().encode(payload.text, BarcodeFormat.QR_CODE, 0, 0, encodeHints)
         val rows = (0 until bitMatrix.height).map { y ->
             (0 until bitMatrix.width).map { x -> bitMatrix.get(x, y) }
         }

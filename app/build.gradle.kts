@@ -41,6 +41,7 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.zxing.javase)
     testImplementation(libs.konsist)
+    testImplementation(libs.jqwik)
 
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

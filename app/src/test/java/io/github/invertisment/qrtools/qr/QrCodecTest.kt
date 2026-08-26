@@ -1,6 +1,7 @@
 package io.github.invertisment.qrtools.qr
 
 import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource
 import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.qrcode.QRCodeWriter
@@ -13,7 +14,13 @@ class QrCodecTest {
     @Test
     fun `encode produces the same module grid ZXing itself would produce`() {
         val text = "hello world"
-        val reference = QRCodeWriter().encode(text, BarcodeFormat.QR_CODE, 0, 0)
+        val reference = QRCodeWriter().encode(
+            text,
+            BarcodeFormat.QR_CODE,
+            0,
+            0,
+            mapOf(EncodeHintType.QR_COMPACT to true),
+        )
 
         val matrix = QrCodec.encode(QrPayload(text))
 

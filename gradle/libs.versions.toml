@@ -10,6 +10,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 zxing = "3.5.3"
 konsist = "0.17.3"
+jqwik = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,6 +24,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
 zxing-javase = { group = "com.google.zxing", name = "javase", version.ref = "zxing" }
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
+jqwik = { group = "net.jqwik", name = "jqwik", version.ref = "jqwik" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
