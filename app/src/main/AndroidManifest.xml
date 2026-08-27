@@ -22,7 +22,7 @@
         android:theme="@style/Theme.QRTools">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".glue.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         </activity>
 
         <service
-            android:name=".keyboard.QrKeyboardService"
+            android:name=".glue.keyboard.QrKeyboardService"
             android:exported="true"
             android:label="@string/keyboard_label"
             android:permission="android.permission.BIND_INPUT_METHOD">
@@ -44,7 +44,7 @@
         </service>
 
         <activity
-            android:name=".keyboard.CameraPermissionActivity"
+            android:name=".glue.keyboard.CameraPermissionActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:taskAffinity=""

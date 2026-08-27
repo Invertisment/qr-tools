@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.keyboard
+package io.github.invertisment.qrtools.glue.keyboard
 
 import android.Manifest
 import android.content.Intent
@@ -13,11 +13,11 @@ import android.widget.PopupWindow
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import io.github.invertisment.qrtools.R
-import io.github.invertisment.qrtools.camera.QrScanner
+import io.github.invertisment.qrtools.infra.camera.QrScanner
 
 /**
  * Glue: the framework-mandated IME entry point. Wires the keyboard's scan button to [QrScanner]
- * (adapter layer) and commits a successful decode straight into the field currently being
+ * (infra layer) and commits a successful decode straight into the field currently being
  * edited via [getCurrentInputConnection]. The same button toggles the popup open and closed —
  * it reads "Scan QR code" normally and "Hide QR scanner" while the popup is showing. Makes no
  * decisions of its own beyond that wiring — everything it calls already decided what to do.

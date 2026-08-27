@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.camera
+package io.github.invertisment.qrtools.infra.camera
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
@@ -11,14 +11,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import io.github.invertisment.qrtools.qr.QrCodec
-import io.github.invertisment.qrtools.qr.QrPayload
+import io.github.invertisment.qrtools.core.qr.QrCodec
+import io.github.invertisment.qrtools.core.qr.QrPayload
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Drives a CameraX preview + frame analysis pipeline, decoding frames with [QrCodec] until one
- * succeeds. Adapter layer: the only place CameraX and its pixel formats are visible — callers
+ * succeeds. Infra layer: the only place CameraX and its pixel formats are visible — callers
  * only ever see [QrPayload]. One instance is good for exactly one scan session; call [stop] when
  * done (or discard the instance) rather than reusing it for a second scan.
  */

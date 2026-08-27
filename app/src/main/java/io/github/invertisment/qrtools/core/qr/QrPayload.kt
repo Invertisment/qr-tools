@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.qr
+package io.github.invertisment.qrtools.core.qr
 
 /** Text encoded into, or decoded from, a QR code. */
 data class QrPayload(val text: String) {

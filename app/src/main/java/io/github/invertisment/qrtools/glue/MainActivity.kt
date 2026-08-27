@@ -1,9 +1,10 @@
-package io.github.invertisment.qrtools
+package io.github.invertisment.qrtools.glue
 
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
+import io.github.invertisment.qrtools.R
 
 /**
  * Glue: the app's launcher entry point. An input method can't be enabled programmatically —
