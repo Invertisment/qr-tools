@@ -7,6 +7,7 @@ import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatReader
 import com.google.zxing.PlanarYUVLuminanceSource
 import com.google.zxing.ReaderException
+import com.google.zxing.WriterException
 import com.google.zxing.common.HybridBinarizer
 import com.google.zxing.qrcode.QRCodeWriter
 
@@ -27,8 +28,13 @@ object QrCodec {
      */
     private val encodeHints = mapOf(EncodeHintType.QR_COMPACT to true)
 
-    fun encode(payload: QrPayload): QrMatrix {
-        val bitMatrix = QRCodeWriter().encode(payload.text, BarcodeFormat.QR_CODE, 0, 0, encodeHints)
+    /** Encodes [payload] into a module grid. Returns null if the text is too long to fit in a QR code. */
+    fun encode(payload: QrPayload): QrMatrix? {
+        val bitMatrix = try {
+            QRCodeWriter().encode(payload.text, BarcodeFormat.QR_CODE, 0, 0, encodeHints)
+        } catch (e: WriterException) {
+            return null
+        }
         val rows = (0 until bitMatrix.height).map { y ->
             (0 until bitMatrix.width).map { x -> bitMatrix.get(x, y) }
         }

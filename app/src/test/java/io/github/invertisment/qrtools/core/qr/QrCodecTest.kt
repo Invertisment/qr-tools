@@ -22,7 +22,7 @@ class QrCodecTest {
             mapOf(EncodeHintType.QR_COMPACT to true),
         )
 
-        val matrix = QrCodec.encode(QrPayload(text))
+        val matrix = QrCodec.encode(QrPayload(text))!!
 
         assertEquals(reference.width, matrix.moduleCount)
         for (y in 0 until reference.height) {
@@ -48,5 +48,11 @@ class QrCodecTest {
     fun `decoding a blank frame finds nothing`() {
         val blank = ByteArray(100 * 100) { 0xFF.toByte() }
         assertNull(QrCodec.decode(blank, 100, 100))
+    }
+
+    @Test
+    fun `encoding text past QR capacity returns null instead of throwing`() {
+        val tooLong = "a".repeat(5000)
+        assertNull(QrCodec.encode(QrPayload(tooLong)))
     }
 }

@@ -39,7 +39,7 @@ class QrCodecPropertyTest {
 
         val failures = texts.count { text ->
             val payload = QrPayload(text)
-            val matrix = QrCodec.encode(payload)
+            val matrix = QrCodec.encode(payload)!!
             QrCodec.decode(matrix.toLuminance(), matrix.moduleCount * PIXELS_PER_MODULE, matrix.moduleCount * PIXELS_PER_MODULE) != payload
         }
 

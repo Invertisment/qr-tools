@@ -50,6 +50,20 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
+        <activity
+            android:name=".glue.share.ShareQrActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:label="@string/share_qr_activity_label"
+            android:taskAffinity=""
+            android:theme="@style/Theme.MaterialComponents.DayNight.Dialog">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
