@@ -24,3 +24,9 @@ make test
 ## License
 
 GPL-3.0-or-later. See [LICENSE](LICENSE).
+
+## F-Droid
+
+Deployment to F-Droid is pending (submitted, awaiting merge review here: https://gitlab.com/fdroid/fdroiddata/-/merge_requests/47006).
+
+![Screenshot](fastlane/metadata/android/en-US/images/phoneScreenshots/1.png)
