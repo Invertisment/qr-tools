@@ -1,5 +1,7 @@
 # QR tools
 
+This app's structure follows the architecture guideline in [Invertisment/scaffolding](https://github.com/Invertisment/scaffolding): code is split into a pure `core` layer, an `infra` layer for anything touching the camera/OS, and a `glue` layer for framework entry points — with `core` never allowed to depend on `infra` or `glue`, and `infra` never allowed to depend on `glue`. These boundaries aren't just a convention: a Konsist-based test (`ArchitectureTest`) mechanically enforces them and fails the build if a file lands under the wrong layer or imports across a forbidden direction. QR tools exists partly as a concrete example of an app gated this way.
+
 A small Android utility built around two features:
 
 - A keyboard (input method) with a "Scan QR code" button that opens a camera popup in place, without hiding the keyboard or losing focus on the field you're typing into.
