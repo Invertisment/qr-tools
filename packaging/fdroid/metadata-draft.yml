@@ -1,0 +1,39 @@
+# Draft metadata for submitting QR tools to the official F-Droid repo.
+#
+# This file is NOT read by F-Droid from this repository — F-Droid does not support an
+# in-app-repo metadata file (no ".fdroid.yml" convention). It only builds from metadata
+# living in a separate repo: https://gitlab.com/fdroid/fdroiddata
+#
+# To submit: fork that repo, add this content (with the TODOs below filled in) as
+# metadata/io.github.invertisment.qrtools.yml, and open a merge request.
+#
+# Fill in before submitting:
+#   - SourceCode / Repo: the public git host URL once one exists (GitHub/GitLab/Codeberg)
+#   - IssueTracker: same host's issues URL
+#   - AuthorName: your name or handle
+#   - Builds[0].commit: the git tag for this release (e.g. v1.0) once it exists
+
+Categories:
+  - System
+
+License: GPL-3.0-or-later
+AuthorName: Invertisment
+
+SourceCode: https://github.com/invertisment/qr-tools
+IssueTracker: https://github.com/invertisment/qr-tools/issues
+
+RepoType: git
+Repo: https://github.com/invertisment/qr-tools.git
+
+Builds:
+  - versionName: '1.0'
+    versionCode: 1
+    commit: v1.0 # TODO: create this tag once ready to submit
+    subdir: app
+    gradle:
+      - yes
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: '1.0'
+CurrentVersionCode: 1

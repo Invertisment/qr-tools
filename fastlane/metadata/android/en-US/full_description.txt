@@ -1,0 +1,7 @@
+QR tools is a small utility app built around two features:
+
+* A keyboard (input method) with a "Scan QR code" button. Tap it to open a camera popup right over whatever app and text field you're typing into; a successful scan is inserted straight into that field, and the keyboard itself is never hidden.
+
+* A share-target: select text anywhere, share it, and pick "QR tools" to get a QR code for that text in a popup, without leaving the app you shared from.
+
+No ads, no analytics, no network access, no permissions beyond the camera (only used while actively scanning).

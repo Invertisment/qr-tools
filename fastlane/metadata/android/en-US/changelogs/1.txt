@@ -1,0 +1,3 @@
+Initial release:
+* QR-scanning keyboard with an in-place camera popup
+* Share any text to get a QR code for it
