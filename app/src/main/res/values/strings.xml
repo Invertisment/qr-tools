@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">QR tools</string>
+    <string name="keyboard_label">QR Tools Keyboard</string>
+    <string name="main_instructions">Enable \"QR Tools Keyboard\" below, then switch to it from any text field\'s keyboard switcher to scan a QR code straight into that field.</string>
+    <string name="open_keyboard_settings_button">Open keyboard settings</string>
+    <string name="scan_qr_button">Scan QR code</string>
+    <string name="hide_qr_scanner_button">Hide QR scanner</string>
+    <string name="switch_keyboard_button">Switch keyboard</string>
 </resources>

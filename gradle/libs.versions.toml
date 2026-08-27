@@ -11,6 +11,8 @@ material = "1.10.0"
 zxing = "3.5.3"
 konsist = "0.17.3"
 jqwik = "1.10.1"
+camerax = "1.6.1"
+lifecycleRuntime = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +27,11 @@ zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxing" 
 zxing-javase = { group = "com.google.zxing", name = "javase", version.ref = "zxing" }
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 jqwik = { group = "net.jqwik", name = "jqwik", version.ref = "jqwik" }
+camerax-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax" }
+camerax-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax" }
+camerax-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax" }
+camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
+androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime", version.ref = "lifecycleRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
