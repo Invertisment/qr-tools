@@ -3,7 +3,6 @@ BUILD_TOOLS := $(shell ls -d $(ANDROID_HOME)/build-tools/*/ 2>/dev/null | sort -
 APKSIGNER := $(BUILD_TOOLS)apksigner
 
 RELEASE_KEY_ALIAS ?= fdroid-qrtools
-RELEASE_JAVA_HOME ?= /usr/lib/jvm/java-21-openjdk
 
 UNSIGNED_APK := app/build/outputs/apk/release/app-release-unsigned.apk
 SIGNED_APK := app-release-signed.apk
@@ -28,23 +27,34 @@ test:
 # (which just uses Gradle's direct output) — confirmed the hard way, this broke the
 # reproducible-build byte comparison the first time around.
 #
-# Builds with RELEASE_JAVA_HOME (default: a JDK 21 install), not whatever JDK is on PATH —
-# F-Droid's build container uses JDK 21, and D8/Kotlin compilation is not guaranteed to
-# produce byte-identical output across different host JDK major versions. Also confirmed the
-# hard way: building with a newer local JDK produced a real digest mismatch against F-Droid's
-# rebuild even after the zipalign fix.
+# Passes --alignment-preserved true: apksigner from build-tools >= 35.0.0-rc1 defaults this
+# to false, which makes it silently re-pad every zip entry's alignment (4-byte -> 16k page
+# alignment for native libs) as part of signing, even when the input is already aligned.
+# That rewrites the exact bytes the v2/v3 signature digest is computed over, so F-Droid's
+# apksigcopier — which splices our signature onto its own independently-built unsigned APK
+# without ever invoking apksigner's realignment — would otherwise see a CHUNKED_SHA256
+# digest mismatch.
+#
+# Passes --v1-signing-enabled false: apksigner also adds a v1/JAR signature (META-INF/
+# MANIFEST.MF, .SF, .RSA) by default, which only exists for pre-Android-7.0 (API < 24)
+# compatibility. minSdk here is already 24, so it adds nothing but extra zip entries —
+# and apksigcopier splices those back on at a different byte position than apksigner's own
+# signing pass used, which is enough to break the whole-file v2/v3 digest even though the
+# entry contents are identical. Disabling v1 removes those entries entirely, so there's
+# nothing for the splice to place differently.
+#
+# Confirmed both of the above the hard way, in the same buildserver container F-Droid's CI
+# uses: splicing our own signature back onto the exact unsigned APK it was generated from
+# failed with a CHUNKED_SHA256 mismatch until both flags were applied. (JDK version, once
+# suspected too, turned out not to matter — the unsigned APK was proven byte-identical
+# across JDK 21 and JDK 26 builds.)
 release:
 	@if [ -z "$(RELEASE_KEYSTORE)" ]; then \
 		echo "Error: RELEASE_KEYSTORE is not set." >&2; \
 		echo "Usage: RELEASE_KEYSTORE=/path/to/release.p12 make release" >&2; \
 		exit 1; \
 	fi
-	@if [ ! -d "$(RELEASE_JAVA_HOME)" ]; then \
-		echo "Error: RELEASE_JAVA_HOME does not exist: $(RELEASE_JAVA_HOME)" >&2; \
-		echo "Usage: RELEASE_JAVA_HOME=/path/to/jdk-21 make release RELEASE_KEYSTORE=..." >&2; \
-		exit 1; \
-	fi
-	JAVA_HOME="$(RELEASE_JAVA_HOME)" ./gradlew :app:assembleRelease
-	"$(APKSIGNER)" sign --ks "$(RELEASE_KEYSTORE)" --ks-key-alias "$(RELEASE_KEY_ALIAS)" --out "$(SIGNED_APK)" "$(UNSIGNED_APK)"
+	./gradlew :app:assembleRelease
+	"$(APKSIGNER)" sign --ks "$(RELEASE_KEYSTORE)" --ks-key-alias "$(RELEASE_KEY_ALIAS)" --alignment-preserved true --v1-signing-enabled false --out "$(SIGNED_APK)" "$(UNSIGNED_APK)"
 	"$(APKSIGNER)" verify --verbose "$(SIGNED_APK)"
 	@echo "Signed release APK: $(SIGNED_APK)"
