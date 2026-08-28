@@ -15,3 +15,11 @@
 local.properties
 
 .idea/
+
+# Signing keys and build artifacts must never be committed — the keystore is a private key,
+# and the signed APK belongs on a GitHub Release, not in source history.
+*.jks
+*.keystore
+*.p12
+app-release-*.apk
+app-release-*.apk.idsig
