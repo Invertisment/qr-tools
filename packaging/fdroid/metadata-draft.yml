@@ -13,7 +13,7 @@ Repo: https://github.com/invertisment/qr-tools.git
 Builds:
   - versionName: '1.0'
     versionCode: 1
-    commit: ba5f77d94c806a82ed029f7968d61e7def50ac02
+    commit: ca243a3f1d0090448499423fea60e03d0d11fe01
     subdir: app
     gradle:
       - yes
@@ -24,3 +24,4 @@ CurrentVersion: '1.0'
 CurrentVersionCode: 1
 AllowedAPKSigningKeys:
   - 4ced424f29c6b5eb8b6d28cb778ae494f39683c7d6222a92cb59d992c8c22f0f
+Binaries: https://github.com/invertisment/qr-tools/releases/download/v%v/app-release-signed.apk
