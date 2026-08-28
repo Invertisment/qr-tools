@@ -3,6 +3,7 @@ BUILD_TOOLS := $(shell ls -d $(ANDROID_HOME)/build-tools/*/ 2>/dev/null | sort -
 APKSIGNER := $(BUILD_TOOLS)apksigner
 
 RELEASE_KEY_ALIAS ?= fdroid-qrtools
+RELEASE_JAVA_HOME ?= /usr/lib/jvm/java-21-openjdk
 
 UNSIGNED_APK := app/build/outputs/apk/release/app-release-unsigned.apk
 SIGNED_APK := app-release-signed.apk
@@ -26,13 +27,24 @@ test:
 # it here rewrites the zip archive and produces different bytes than F-Droid's own rebuild
 # (which just uses Gradle's direct output) — confirmed the hard way, this broke the
 # reproducible-build byte comparison the first time around.
+#
+# Builds with RELEASE_JAVA_HOME (default: a JDK 21 install), not whatever JDK is on PATH —
+# F-Droid's build container uses JDK 21, and D8/Kotlin compilation is not guaranteed to
+# produce byte-identical output across different host JDK major versions. Also confirmed the
+# hard way: building with a newer local JDK produced a real digest mismatch against F-Droid's
+# rebuild even after the zipalign fix.
 release:
 	@if [ -z "$(RELEASE_KEYSTORE)" ]; then \
 		echo "Error: RELEASE_KEYSTORE is not set." >&2; \
 		echo "Usage: RELEASE_KEYSTORE=/path/to/release.p12 make release" >&2; \
 		exit 1; \
 	fi
-	./gradlew :app:assembleRelease
+	@if [ ! -d "$(RELEASE_JAVA_HOME)" ]; then \
+		echo "Error: RELEASE_JAVA_HOME does not exist: $(RELEASE_JAVA_HOME)" >&2; \
+		echo "Usage: RELEASE_JAVA_HOME=/path/to/jdk-21 make release RELEASE_KEYSTORE=..." >&2; \
+		exit 1; \
+	fi
+	JAVA_HOME="$(RELEASE_JAVA_HOME)" ./gradlew :app:assembleRelease
 	"$(APKSIGNER)" sign --ks "$(RELEASE_KEYSTORE)" --ks-key-alias "$(RELEASE_KEY_ALIAS)" --out "$(SIGNED_APK)" "$(UNSIGNED_APK)"
 	"$(APKSIGNER)" verify --verbose "$(SIGNED_APK)"
 	@echo "Signed release APK: $(SIGNED_APK)"
