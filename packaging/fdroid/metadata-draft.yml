@@ -13,7 +13,7 @@ Repo: https://github.com/invertisment/qr-tools.git
 Builds:
   - versionName: '1.0'
     versionCode: 1
-    commit: ca243a3f1d0090448499423fea60e03d0d11fe01
+    commit: 81154b2581dfa769cbff21f0b5fa85b6dfb6729b
     subdir: app
     gradle:
       - yes
