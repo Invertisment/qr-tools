@@ -5,14 +5,20 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <ImageView
-        android:id="@+id/qr_image"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
+    <FrameLayout
+        android:id="@+id/qr_white_square"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@android:color/white"
-        android:contentDescription="@string/share_qr_image_description"
-        android:padding="16dp"
-        android:scaleType="fitCenter" />
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/share_qr_image_description"
+            android:scaleType="fitCenter" />
+
+    </FrameLayout>
 
 </FrameLayout>
