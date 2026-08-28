@@ -9,6 +9,8 @@ AutoName: QR tools
 
 RepoType: git
 Repo: https://github.com/invertisment/qr-tools.git
+Binaries: 
+  https://github.com/invertisment/qr-tools/releases/download/v%v/app-release-signed.apk
 
 Builds:
   - versionName: '1.0'
@@ -18,10 +20,9 @@ Builds:
     gradle:
       - yes
 
+AllowedAPKSigningKeys: 4ced424f29c6b5eb8b6d28cb778ae494f39683c7d6222a92cb59d992c8c22f0f
+
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
 CurrentVersion: '1.0'
 CurrentVersionCode: 1
-AllowedAPKSigningKeys:
-  - 4ced424f29c6b5eb8b6d28cb778ae494f39683c7d6222a92cb59d992c8c22f0f
-Binaries: https://github.com/invertisment/qr-tools/releases/download/v%v/app-release-signed.apk
