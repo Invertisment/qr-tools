@@ -8,5 +8,5 @@
     <string name="switch_keyboard_button">Switch keyboard</string>
     <string name="share_qr_activity_label">To QR</string>
     <string name="share_qr_image_description">QR code for the shared text</string>
-    <string name="share_qr_too_long">Text is too long to fit in a QR code</string>
+    <string name="share_qr_encode_failed">Couldn\'t create QR code: %1$s</string>
 </resources>

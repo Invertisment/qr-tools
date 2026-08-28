@@ -34,9 +34,8 @@ class ShareQrActivity : AppCompatActivity() {
             return
         }
 
-        val matrix = QrCodec.encode(QrPayload(text))
-        if (matrix == null) {
-            Toast.makeText(this, R.string.share_qr_too_long, Toast.LENGTH_SHORT).show()
+        val matrix = QrCodec.encode(QrPayload(text)).getOrElse { error ->
+            Toast.makeText(this, getString(R.string.share_qr_encode_failed, error.message), Toast.LENGTH_LONG).show()
             finish()
             return
         }

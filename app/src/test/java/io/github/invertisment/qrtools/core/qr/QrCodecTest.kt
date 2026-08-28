@@ -7,6 +7,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter
 import com.google.zxing.qrcode.QRCodeWriter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class QrCodecTest {
@@ -22,7 +23,7 @@ class QrCodecTest {
             mapOf(EncodeHintType.QR_COMPACT to true),
         )
 
-        val matrix = QrCodec.encode(QrPayload(text))!!
+        val matrix = QrCodec.encode(QrPayload(text)).getOrThrow()
 
         assertEquals(reference.width, matrix.moduleCount)
         for (y in 0 until reference.height) {
@@ -51,8 +52,36 @@ class QrCodecTest {
     }
 
     @Test
-    fun `encoding text past QR capacity returns null instead of throwing`() {
+    fun `encoding text past QR capacity fails with a message instead of throwing`() {
         val tooLong = "a".repeat(5000)
-        assertNull(QrCodec.encode(QrPayload(tooLong)))
+        val result = QrCodec.encode(QrPayload(tooLong))
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull()?.message?.isNotBlank() == true)
+    }
+
+    @Test
+    fun `encoding text with an emoji succeeds via the fallback encoder`() {
+        // Regression guard: QR_COMPACT (added earlier to fix a different encoder bug) throws
+        // for some Unicode content outside the Basic Multilingual Plane — confirmed for this
+        // exact 14-character string, nowhere near QR's actual capacity, which used to be
+        // reported to the user as "text is too long" via a hardcoded message. QrCodec now
+        // falls back to the default encoder for exactly this case, which handles it fine.
+        val text = "hello 😀 world"
+        val reference = QRCodeWriter().encode(
+            text,
+            BarcodeFormat.QR_CODE,
+            0,
+            0,
+            mapOf(EncodeHintType.CHARACTER_SET to "UTF-8"),
+        )
+
+        val matrix = QrCodec.encode(QrPayload(text)).getOrThrow()
+
+        assertEquals(reference.width, matrix.moduleCount)
+        for (y in 0 until reference.height) {
+            for (x in 0 until reference.width) {
+                assertEquals(reference.get(x, y), matrix[x, y], "mismatch at ($x, $y)")
+            }
+        }
     }
 }
