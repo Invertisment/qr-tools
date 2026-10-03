@@ -1,13 +1,16 @@
 ANDROID_HOME ?= $(HOME)/Android/Sdk
 BUILD_TOOLS := $(shell ls -d $(ANDROID_HOME)/build-tools/*/ 2>/dev/null | sort -V | tail -1)
 APKSIGNER := $(BUILD_TOOLS)apksigner
+ADB ?= $(ANDROID_HOME)/platform-tools/adb
+
+APP_ID := io.github.invertisment.qrtools
 
 RELEASE_KEY_ALIAS ?= fdroid-qrtools
 
 UNSIGNED_APK := app/build/outputs/apk/release/app-release-unsigned.apk
 SIGNED_APK := app-release-signed.apk
 
-.PHONY: all build test release
+.PHONY: all build test run release
 
 all: build test
 
@@ -16,6 +19,14 @@ build:
 
 test:
 	./gradlew :app:testDebugUnitTest
+
+# Installs the debug build on the connected device and opens its launcher screen. With more
+# than one device attached, pick one with ANDROID_SERIAL=<serial> (see `adb devices`); both
+# Gradle and adb honor it. Launches by package rather than by Activity class, so moving
+# MainActivity to another package doesn't break this target.
+run:
+	./gradlew :app:installDebug
+	"$(ADB)" shell monkey -p $(APP_ID) -c android.intent.category.LAUNCHER 1
 
 # Builds and signs a release APK for the reproducible-build / F-Droid Binaries upload. Reads
 # the keystore from the RELEASE_KEYSTORE env var (never a Makefile default — there's no safe
