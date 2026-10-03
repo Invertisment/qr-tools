@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import io.github.invertisment.qrtools.camera.core.LuminancePlane
 import io.github.invertisment.qrtools.qr.core.QrCodec
 import io.github.invertisment.qrtools.qr.core.QrPayload
 import java.util.concurrent.Executors
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Drives a CameraX preview + frame analysis pipeline, decoding frames with [QrCodec] until one
- * succeeds. Infra layer: the only place CameraX and its pixel formats are visible — callers
+ * succeeds. Infra layer: the only place CameraX and its buffers are visible — callers
  * only ever see [QrPayload]. One instance is good for exactly one scan session; call [stop] when
  * done (or discard the instance) rather than reusing it for a second scan.
  */
@@ -77,31 +78,13 @@ class QrScanner(private val context: Context) : LifecycleOwner {
 
     /**
      * CameraX guarantees YUV_420_888 for [ImageAnalysis], whose plane 0 is the luminance (Y)
-     * plane [QrCodec.decode] expects directly — but only when tightly packed. Some devices pad
-     * each row to a wider stride, so this copies row-by-row rather than assuming rowStride ==
-     * width, which would otherwise skew the image and prevent detection.
+     * plane [QrCodec.decode] expects — once [LuminancePlane.unpad] strips any per-row padding.
+     * This only copies the plane out of CameraX's buffer.
      */
     private fun ImageProxy.toLuminanceBytes(): ByteArray {
         val plane = planes[0]
-        val buffer = plane.buffer
-        val rowStride = plane.rowStride
-        val pixelStride = plane.pixelStride
-
-        if (rowStride == width && pixelStride == 1) {
-            val bytes = ByteArray(buffer.remaining())
-            buffer.get(bytes)
-            return bytes
-        }
-
-        val bytes = ByteArray(width * height)
-        val row = ByteArray(rowStride)
-        for (y in 0 until height) {
-            buffer.position(y * rowStride)
-            buffer.get(row, 0, minOf(rowStride, buffer.remaining()))
-            for (x in 0 until width) {
-                bytes[y * width + x] = row[x * pixelStride]
-            }
-        }
-        return bytes
+        val buffer = plane.buffer.apply { rewind() }
+        val bytes = ByteArray(buffer.remaining()).also { buffer.get(it) }
+        return LuminancePlane.unpad(bytes, width, height, plane.rowStride, plane.pixelStride)
     }
 }
