@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.core.qr
+package io.github.invertisment.qrtools.qr.core
 
 /** The module grid of a rendered QR code, independent of any bitmap/rendering library. */
 data class QrMatrix(val moduleCount: Int, private val modules: List<List<Boolean>>) {

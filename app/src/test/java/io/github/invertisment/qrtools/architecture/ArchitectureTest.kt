@@ -6,12 +6,13 @@ import org.junit.jupiter.api.Test
 
 /**
  * Mechanically enforces the core/infra/glue boundary described in the project's scaffolding
- * guideline: layer is the top-level package cut (`core`, `infra`, `glue`), so these rules are
- * generic over whatever feature packages live inside each layer, rather than naming today's
- * `qr`/`camera`/`keyboard` specifically — a new package under an existing layer is covered
- * automatically, with no matching update needed here. A new *layer*, or a package that isn't
- * under any of the three, is exactly what `every production file belongs to a sanctioned layer`
- * below is for.
+ * guideline. Layer is the bottom-level package cut: components are packaged normally (`qr`,
+ * `camera`, `keyboard`, ...) and each one's innermost package is its layer — `qr.core`,
+ * `camera.infra`, `keyboard.glue`. A file's or an import's layer is read from the layer-named
+ * segment of its package path, so these rules hold across every component, including ones added
+ * later, with no update needed here. Layer names are reserved, which is what makes that lookup
+ * unambiguous — `every production file sits directly in exactly one layer package` below keeps
+ * them that way.
  */
 class ArchitectureTest {
 
@@ -20,37 +21,42 @@ class ArchitectureTest {
 
     @Test
     fun `core must not import android framework types`() {
-        filesUnder("core").assertTrue { file -> file.imports.none { it.name.startsWith("android") } }
+        filesIn("core").assertTrue { file -> file.imports.none { it.name.startsWith("android") } }
     }
 
     @Test
-    fun `core must not import infra or glue packages`() {
-        filesUnder("core").assertTrue { file ->
-            file.imports.none { isUnderLayer(it.name, "infra") || isUnderLayer(it.name, "glue") }
-        }
+    fun `core must not import infra or glue from any component`() {
+        filesIn("core").assertTrue { file -> file.imports.none { layerOf(it.name) in setOf("infra", "glue") } }
     }
 
     @Test
-    fun `infra must not import glue packages`() {
-        filesUnder("infra").assertTrue { file -> file.imports.none { isUnderLayer(it.name, "glue") } }
+    fun `infra must not import glue from any component`() {
+        filesIn("infra").assertTrue { file -> file.imports.none { layerOf(it.name) == "glue" } }
     }
 
     @Test
-    fun `every production file belongs to a sanctioned layer`() {
+    fun `every production file sits directly in exactly one layer package`() {
         // Production only (not test sources): a test helper like ArchitectureTest itself has no
-        // reason to live under core, infra, or glue, and shouldn't be forced to.
+        // reason to live in a layer package, and shouldn't be forced to. "Directly" means the
+        // layer is the package's last segment — no subpackages under a layer, and no layer
+        // nested inside another (`qr.core.infra`) or reused as a component name (`core.qr`).
         Konsist.scopeFromProduction().files.assertTrue { file ->
-            val packageName = file.packagee?.name ?: return@assertTrue false
-            layers.any { layer -> isUnderLayer(packageName, layer) }
+            val segments = segmentsUnderBase(file.packagee?.name)
+            segments.count { it in layers } == 1 && segments.last() in layers
         }
     }
 
-    private fun filesUnder(layer: String) =
-        Konsist.scopeFromProject().files.filter { isUnderLayer(it.packagee?.name, layer) }
+    private fun filesIn(layer: String) =
+        Konsist.scopeFromProject().files.filter { layerOf(it.packagee?.name) == layer }
 
-    /** True if [packageOrImportName] is `$basePackage.$layer` itself, or nested under it. */
-    private fun isUnderLayer(packageOrImportName: String?, layer: String): Boolean {
-        val prefix = "$basePackage.$layer"
-        return packageOrImportName == prefix || packageOrImportName?.startsWith("$prefix.") == true
-    }
+    /**
+     * The layer named in [packageOrImportName]'s path under [basePackage], or null for names
+     * outside it (third-party and framework imports) or under it with no layer segment (e.g.
+     * the generated `R` class).
+     */
+    private fun layerOf(packageOrImportName: String?): String? =
+        segmentsUnderBase(packageOrImportName).firstOrNull { it in layers }
+
+    private fun segmentsUnderBase(name: String?): List<String> =
+        if (name?.startsWith("$basePackage.") == true) name.removePrefix("$basePackage.").split('.') else emptyList()
 }

@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.core.qr
+package io.github.invertisment.qrtools.qr.core
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.BinaryBitmap

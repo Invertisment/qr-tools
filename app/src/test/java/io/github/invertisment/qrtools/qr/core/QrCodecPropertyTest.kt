@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.core.qr
+package io.github.invertisment.qrtools.qr.core
 
 import net.jqwik.api.Arbitraries
 import org.junit.jupiter.api.Assertions.assertTrue

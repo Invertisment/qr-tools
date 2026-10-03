@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.glue
+package io.github.invertisment.qrtools.keyboard.glue
 
 import android.content.Intent
 import android.os.Bundle

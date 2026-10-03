@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.glue.share
+package io.github.invertisment.qrtools.share.glue
 
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,9 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
 import io.github.invertisment.qrtools.R
-import io.github.invertisment.qrtools.core.qr.QrCodec
-import io.github.invertisment.qrtools.core.qr.QrMatrix
-import io.github.invertisment.qrtools.core.qr.QrPayload
+import io.github.invertisment.qrtools.qr.core.QrCodec
+import io.github.invertisment.qrtools.qr.core.QrMatrix
+import io.github.invertisment.qrtools.qr.core.QrPayload
 
 /**
  * Glue: the share-target entry point for "share text, get a QR code for it right there".

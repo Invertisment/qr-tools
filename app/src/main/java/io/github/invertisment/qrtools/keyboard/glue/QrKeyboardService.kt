@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.glue.keyboard
+package io.github.invertisment.qrtools.keyboard.glue
 
 import android.Manifest
 import android.content.Intent
@@ -13,7 +13,7 @@ import android.widget.PopupWindow
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import io.github.invertisment.qrtools.R
-import io.github.invertisment.qrtools.infra.camera.QrScanner
+import io.github.invertisment.qrtools.camera.infra.QrScanner
 
 /**
  * Glue: the framework-mandated IME entry point. Wires the keyboard's scan button to [QrScanner]

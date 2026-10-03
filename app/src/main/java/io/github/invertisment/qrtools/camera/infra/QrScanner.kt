@@ -1,4 +1,4 @@
-package io.github.invertisment.qrtools.infra.camera
+package io.github.invertisment.qrtools.camera.infra
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import io.github.invertisment.qrtools.core.qr.QrCodec
-import io.github.invertisment.qrtools.core.qr.QrPayload
+import io.github.invertisment.qrtools.qr.core.QrCodec
+import io.github.invertisment.qrtools.qr.core.QrPayload
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 
